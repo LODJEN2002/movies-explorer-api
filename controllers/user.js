@@ -1,13 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const model = require('../models/user');
-const { NotFoundError } = require('../errors/NotFoundError');
-const { BadRequestError } = require('../errors/BadRequestError');
+const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
+const ConflictError = require('../errors/ConflictError');
+
 require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { email, password, name } = req.body;
 
   bcrypt.hash(password, 10)
@@ -17,7 +19,6 @@ module.exports.createUser = (req, res) => {
       name,
     }))
     .then((user) => {
-      console.log(user);
       res.send({
         email,
         name,
@@ -26,13 +27,16 @@ module.exports.createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        return res.send({ messange: 'Пользователь с данным email уже создан' });
+        next(new ConflictError('Пользователь с таким email уже зарегестриван.'));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      return res.send({ err });
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return model.findUserByCredentials(email, password)
@@ -45,19 +49,21 @@ module.exports.login = (req, res) => {
 
       return res.send({ token });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(next);
 };
 
-module.exports.getMyProfiel = (req, res) => {
+module.exports.getMyProfiel = (req, res, next) => {
   model.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        return res.send({ messange: 'Что то не так!' });
+        throw new NotFoundError('Запрашиваемый пользователь не найден');
       }
-      return res.send(user);
-    });
+      return res.send({
+        email: user.email,
+        name: user.name,
+      });
+    })
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -66,11 +72,16 @@ module.exports.updateUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
       }
-      return res.status(200).send(user);
+      return res.send({
+        email: user.email,
+        name: user.name,
+      });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
+      } if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже зарегестриван.'));
       } else {
         next(err);
       }

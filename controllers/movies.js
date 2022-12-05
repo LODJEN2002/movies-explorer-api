@@ -3,10 +3,10 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 
-module.exports.createMovie = (req, res) => {
+module.exports.createMovie = (req, res, next) => {
   const {
     country, director, duration, year, description, image, trailerLink,
-    thumbnail, nameRU, nameEN,
+    thumbnail, nameRU, nameEN, movieId,
   } = req.body;
 
   model.create({
@@ -21,22 +21,31 @@ module.exports.createMovie = (req, res) => {
     owner: req.user._id,
     nameRU,
     nameEN,
+    movieId,
   })
     .then((movie) => {
-      res.send(movie);
+      res.status(201).send(movie);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
     });
 };
 
-module.exports.getLikeMovies = (req, res) => {
+module.exports.getLikeMovies = (req, res, next) => {
   model.find({ owner: req.user._id })
-    .then((movies) => res.send(movies));
+    .then((movies) => res.send(movies))
+    .catch(next);
 };
 
 module.exports.deliteMovieById = (req, res, next) => {
   model.findById(req.params.movieId)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Передан несуществующий _id карточки.');
+        throw new NotFoundError('Передан несуществующий _id фильма.');
       }
       if (movie.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Недостаточно прав.');
