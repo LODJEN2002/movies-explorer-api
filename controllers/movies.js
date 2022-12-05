@@ -28,22 +28,9 @@ module.exports.createMovie = (req, res) => {
 };
 
 module.exports.getLikeMovies = (req, res) => {
-  model.find()
-    .then((movies) => {
-      movies.forEach((element) => console.log(req.user._id === element.owner.toString()));
-    });
-      // if (req.user._id === movies.forEach((element) => {
-        // console.log(element.owner.toString());
-      // })) {
-      // console.log(req.user._id);
-        // movies.forEach((element) => {
-          // console.log(element.owner.toString());
-        // });
-        // res.send(movies);
-      // }
-      // return res.send('ХАХ НЕ ВЫЛО ТУПОЙ))');
-    };
-// };
+  model.find({ owner: req.user._id })
+    .then((movies) => res.send(movies));
+};
 
 module.exports.deliteMovieById = (req, res, next) => {
   model.findById(req.params.movieId)
