@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const router = require('./routes/index');
+const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralError = require('./errors/centralError');
 
@@ -18,7 +18,7 @@ app.use(requestLogger);
 const allowedCors = [
   'http://localhost:3000',
   'http://localhost:3001',
-  // тут еще надо добавть back.
+  // тут еще надо добавть front.
 ];
 
 app.use((req, res, next) => {

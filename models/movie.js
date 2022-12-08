@@ -25,14 +25,32 @@ const moviesShema = new mongoose.Schema(
     image: {
       type: String,
       require: true,
+      validate: {
+        validator(v) {
+          return /https?:\/\/\S+/.test(v);
+        },
+        message: (props) => `${props.value} Это не url!`,
+      },
     },
     trailerLink: {
       type: String,
       require: true,
+      validate: {
+        validator(v) {
+          return /https?:\/\/\S+/.test(v);
+        },
+        message: (props) => `${props.value} Это не url!`,
+      },
     },
     thumbnail: {
       type: String,
       require: true,
+      validate: {
+        validator(v) {
+          return /https?:\/\/\S+/.test(v);
+        },
+        message: (props) => `${props.value} Это не url!`,
+      },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,7 +58,7 @@ const moviesShema = new mongoose.Schema(
       require: true,
     },
     movieId: {
-      type: String,
+      type: Number,
       require: true,
     },
     nameRU: {

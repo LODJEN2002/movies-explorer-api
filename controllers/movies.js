@@ -4,25 +4,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 
 module.exports.createMovie = (req, res, next) => {
-  const {
-    country, director, duration, year, description, image, trailerLink,
-    thumbnail, nameRU, nameEN, movieId,
-  } = req.body;
-
-  model.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    owner: req.user._id,
-    nameRU,
-    nameEN,
-    movieId,
-  })
+  model.create({ ...req.body, owner: req.user._id })
     .then((movie) => {
       res.status(201).send(movie);
     })

@@ -18,11 +18,11 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
       name,
     }))
-    .then((user) => {
+    .then(() => {
       res.send({
         email,
         name,
-        id: user._id,
+        // id: user._id,
       });
     })
     .catch((err) => {

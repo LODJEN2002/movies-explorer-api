@@ -5,7 +5,7 @@ const BadRequestError = require('./BadRequestError');
 module.exports.createUserValidation = celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
-    password: Joi.string().required().min(2),
+    password: Joi.string().required(),
     name: Joi.string().required().min(2).max(30),
   }),
 });
@@ -22,7 +22,7 @@ module.exports.createMovieValidation = celebrate({
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
-    year: Joi.number().required(),
+    year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().required().custom((image) => {
       if (!validator.isURL(image)) {
@@ -57,6 +57,6 @@ module.exports.deliteMovieByIdValidation = celebrate({
 module.exports.updateUserValidation = celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
   }),
 });
