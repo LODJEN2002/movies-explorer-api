@@ -20,7 +20,6 @@ const allowedCors = [
   'http://localhost:3001',
   'http://movies.frontend.nomoredomainsclub.ru/',
   'https://movies.frontend.nomoredomainsclub.ru/',
-  'movies.frontend.nomoredomainsclub.ru,',
 ];
 
 app.use((req, res, next) => {
@@ -31,6 +30,7 @@ app.use((req, res, next) => {
 
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', true);
   }
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
