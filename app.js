@@ -18,7 +18,7 @@ app.use(requestLogger);
 const allowedCors = [
   'http://localhost:3000',
   'http://localhost:3001',
-  // тут еще надо добавть front.
+  'http://movies.frontend.nomoredomainsclub.ru/',
 ];
 
 app.use((req, res, next) => {
