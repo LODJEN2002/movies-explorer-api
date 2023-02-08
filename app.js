@@ -19,6 +19,8 @@ const allowedCors = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://movies.frontend.nomoredomainsclub.ru/',
+  'https://movies.frontend.nomoredomainsclub.ru/',
+  'movies.frontend.nomoredomainsclub.ru,',
 ];
 
 app.use((req, res, next) => {
