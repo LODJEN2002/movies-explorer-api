@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const cors = require('cors');
 const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralError = require('./errors/centralError');
@@ -18,7 +17,6 @@ app.use(requestLogger);
 
 const allowedCors = [
   'http://movies.frontend.nomoredomainsclub.ru',
-  'movies.frontend.nomoredomainsclub.ru',
   'https://movies.frontend.nomoredomainsclub.ru',
   'http://localhost:3000',
   'http://localhost:3001',
@@ -30,7 +28,7 @@ app.use((req, res, next) => {
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   const requestHeaders = req.headers['access-control-request-headers'];
 
-  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Origin', '*');
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', true);
@@ -42,8 +40,6 @@ app.use((req, res, next) => {
   }
   return next();
 });
-
-app.use(cors({ credentials: true, origin: 'http://movies.frontend.nomoredomainsclub.ru' }));
 
 app.use(router);
 
