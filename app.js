@@ -15,12 +15,11 @@ mongoose.connect(MONGO_URL, { autoIndex: true });
 
 app.use(requestLogger);
 
-const allowedCors = [
-  'http://movies.frontend.nomoredomainsclub.ru',
-  'https://movies.frontend.nomoredomainsclub.ru',
-  'http://localhost:3000',
-  'http://localhost:3001',
-];
+// const allowedCors = [
+//   'http://movies.frontend.nomoredomainsclub.ru',
+//   'http://localhost:3000',
+//   'http://localhost:3001',
+// ];
 
 app.use((req, res, next) => {
   const { origin } = req.headers;
@@ -28,10 +27,9 @@ app.use((req, res, next) => {
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   const requestHeaders = req.headers['access-control-request-headers'];
 
-  // res.header('Access-Control-Allow-Origin', '*');
-  if (allowedCors.includes(origin)) {
+  if ('http://movies.frontend.nomoredomainsclub.ru'.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Credentials', true);
   }
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
