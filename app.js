@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const cors = require('cors');
 const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralError = require('./errors/centralError');
@@ -41,6 +42,8 @@ app.use((req, res, next) => {
   }
   return next();
 });
+
+app.use(cors({ credentials: true, origin: 'http://movies.frontend.nomoredomainsclub.ru' }));
 
 app.use(router);
 
