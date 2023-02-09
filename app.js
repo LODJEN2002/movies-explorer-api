@@ -16,10 +16,10 @@ mongoose.connect(MONGO_URL, { autoIndex: true });
 app.use(requestLogger);
 
 const allowedCors = [
-  'http://localhost:3000',
-  'http://localhost:3001',
   'http://movies.frontend.nomoredomainsclub.ru/',
   'https://movies.frontend.nomoredomainsclub.ru/',
+  // 'http://localhost:3000', // попробуй так... хотя не выйдет я уверен
+  // 'http://localhost:3001',
 ];
 
 app.use((req, res, next) => {
