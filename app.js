@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
-const { errors } = require('celebrate');
+// const cors = require('cors');
+// const { errors } = require('celebrate');
 const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralError = require('./errors/centralError');
@@ -16,35 +16,35 @@ mongoose.connect(MONGO_URL, { autoIndex: true });
 
 app.use(requestLogger);
 
-app.use('*', cors());
+// app.use('*', cors());
 
-// const allowedCors = [
-//   'http://movies.frontend.nomoredomainsclub.ru',
-//   'https://movies.frontend.nomoredomainsclub.ru',
+const allowedCors = [
+  'http://movies.frontend.nomoredomainsclub.ru',
+  'https://movies.frontend.nomoredomainsclub.ru',
 
-//   'http://localhost:3000',
-//   'http://localhost:3001',
-// ];
+  'http://localhost:3000',
+  'http://localhost:3001',
+];
 
-// app.use((req, res, next) => {
-//   const { origin } = req.headers;
-//   const { method } = req;
-//   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-//   const requestHeaders = req.headers['access-control-request-headers'];
+app.use((req, res, next) => {
+  const { origin } = req.headers;
+  const { method } = req;
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+  const requestHeaders = req.headers['access-control-request-headers'];
 
-//   if (allowedCors.includes(origin)) {
-//     res.header('Access-Control-Allow-Origin', origin);
-//     res.header('Access-Control-Allow-Credentials', true);
-//   }
-//   if (method === 'OPTIONS') {
-//     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-//     res.header('Access-Control-Allow-Headers', requestHeaders);
-//     res.header('Access-Control-Allow-Origin', origin);
-//     res.header('Access-Control-Allow-Credentials', true);
-//     return res.end();
-//   }
-//   return next();
-// });
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', true);
+  }
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', true);
+    return res.end();
+  }
+  return next();
+});
 
 app.use(router);
 
